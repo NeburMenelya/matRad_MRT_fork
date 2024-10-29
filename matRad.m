@@ -22,6 +22,9 @@ load TG119.mat
 %load PROSTATE.mat
 %load LIVER.mat
 %load BOXPHANTOM.mat
+%load results_cube.mat
+%load phantom_data.mat
+%load water_phantom_data.mat
 
 % meta information for treatment plan
 pln.numOfFractions  = 30;
@@ -62,6 +65,8 @@ pln.propOpt.optimizer       = 'IPOPT';
 pln.propOpt.runDAO          = false;  % 1/true: run DAO, 0/false: don't / will be ignored for particles
 pln.propSeq.runSequencing   = true;  % true: run sequencing, false: don't / will be ignored for particles and also triggered by runDAO below
 
+%try to use external calculation in the standard matRad file
+ pln.propMC.externalCalculation = true;
 
 %% initial visualization and change objective function settings if desired
 matRadGUI
@@ -73,9 +78,13 @@ stf = matRad_generateStf(ct,cst,pln);
 dij = matRad_calcDoseInfluence(ct, cst, stf, pln);
 
 %% inverse planning for imrt
+
+
 resultGUI  = matRad_fluenceOptimization(dij,cst,pln);
 
 %% sequencing
+
+
 resultGUI = matRad_sequencing(resultGUI,stf,dij,pln);
 
 

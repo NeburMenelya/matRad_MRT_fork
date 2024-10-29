@@ -16,8 +16,8 @@
 matRad_rc
 
 % load patient data, i.e. ct, voi, cst
-%load TG119.mat
-load BOXPHANTOM.mat
+load TG119.mat
+%load BOXPHANTOM.mat
 %load LIVER.mat
 %load PHANTOM_control.mat; ct.resolution.x = 2; ct.resolution.y = 2; ct.resolution.z = 2;
 
@@ -67,11 +67,11 @@ pln.multScen = matRad_multScen(ct,'nomScen'); % optimize on the nominal scenario
 pln.propStf.useRangeShifter = false;  
 
 %Enable LET calculation
-pln.propDoseCalc.calcLET = true;
+%pln.propDoseCalc.calcLET = true;
 
 % Enable/Disable local computation with TOPAS. Enabling this will generate
 % the necessary TOPAS files to run the simulation on any machine or server.
-% pln.propMC.externalCalculation = true;
+ pln.propMC.externalCalculation = true;
 
 %% generate steering file
 %stf = matRad_generateStf(ct,cst,pln);
@@ -79,9 +79,10 @@ stf = matRad_generateSingleBixelStf(ct,cst,pln); %Example to create a single bea
 
 %% analytical dose calculation
 pln.propDoseCalc.engine = 'MCsquare';
-pln.propDoseCalc.numHistoriesPerBeamlet = 1e4;
+pln.propDoseCalc.numHistoriesPerBeamlet = 1e3;
 
 dij = matRad_calcDoseInfluence(ct, cst,stf, pln); %Calculate particle dose influence matrix (dij) with analytical algorithm
+
 
 resultGUI = matRad_calcCubes(ones(dij.totalNumOfBixels,1),dij); %Use uniform weights
 %resultGUI = matRad_fluenceOptimization(dij,cst,pln); %Optimize
@@ -94,7 +95,7 @@ pln.propDoseCalc.engine = 'MCsquare';
 
 % set number of histories lower than default for this example (default: 1e8)
 pln.propDoseCalc.numHistoriesDirect = 1e3;
-%pln.propDoseCalc.externalCalculation = 'write';
+pln.propDoseCalc.externalCalculation = 'write';
 resultGUI_MC = matRad_calcDoseForward(ct,cst,stf,pln,resultGUI.w);
 
 %% Read an external calculation with TOPAS if externalCalculation was set to 'write'

@@ -151,7 +151,7 @@ display(pln);
 % The steering file struct comprises the complete beam geometry along with 
 % ray position, pencil beam positions and energies, source to axis distance (SAD) etc.
 stf = matRad_generateStf(ct,cst,pln);
-
+pln.propDoseCalc.externalCalculation = 'write';
 %%
 % Let's display the beam geometry information of the 6th beam
 display(stf(6));

@@ -75,6 +75,13 @@ resultGUI = matRad_fluenceOptimization(dij,cst,pln);
 % aperture shapes.
 resultGUI = matRad_siochiLeafSequencing(resultGUI,stf,dij,5,1);
 [pln,stf] = matRad_aperture2collimation(pln,stf,resultGUI.sequencing,resultGUI.apertureInfo);
+
+%% Dose Calculation
+%resultGUI_MC = matRad_calcDoseInfluence(ct,cst,stf,pln);
+pln.propDoseCalc.engine = 'TOPAS';
+pln.propDoseCalc.beamProfile = 'phasespace';
+pln.propDoseCalc.externalCalculation = 'write';
+resultGUI_MC = matRad_calcDoseForward(ct,cst,stf,pln,resultGUI.w);
 %% Aperture visualization
 % Use a matrad function to visualize the resulting aperture shapes
 matRad_visApertureInfo(resultGUI.apertureInfo)
